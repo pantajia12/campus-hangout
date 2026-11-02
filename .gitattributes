@@ -1,0 +1,10 @@
+# 줄바꿈 통일 (Windows에서 Android Studio를 써도 gradlew가 깨지지 않도록)
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# 바이너리
+*.jar binary
+*.png binary
+*.jpg binary
+*.webp binary
