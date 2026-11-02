@@ -1,5 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 기본(영어) 문자열. 한국어는 values-ko/strings.xml -->
+<!-- 기본(영어) 문자열. 한국어는 values-ko/strings.xml. 키를 추가하면 두 파일에 모두 넣는다. -->
 <resources>
     <string name="app_name">CAU Buddy</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_chats">Chats</string>
+    <string name="nav_friends">Friends</string>
+    <string name="nav_my">My</string>
+
+    <!-- Home -->
+    <string name="home_title">Explore rooms</string>
+    <string name="home_empty_title">No rooms yet</string>
+    <string name="home_empty_body">Open chat rooms for each category will show up here.</string>
+
+    <!-- Room categories (temporary, replaced by server data in Phase 3) -->
+    <string name="category_all">All</string>
+    <string name="category_hobby">Hobbies</string>
+    <string name="category_study">Study</string>
+    <string name="category_language_exchange">Language exchange</string>
+    <string name="category_food">Food</string>
+    <string name="category_travel">Travel</string>
+    <string name="category_sports">Sports</string>
+    <string name="category_k_culture">K-culture</string>
+    <string name="category_campus_life">Campus life</string>
+
+    <!-- Chats -->
+    <string name="chats_title">My chats</string>
+    <string name="chats_empty_title">No conversations yet</string>
+    <string name="chats_empty_body">Join a room from Home and your chats will gather here.</string>
+
+    <!-- Friends -->
+    <string name="friends_title">Friends</string>
+    <string name="friends_empty_title">Find your buddy</string>
+    <string name="friends_empty_body">Friends who share your interests and languages will be recommended here.</string>
+
+    <!-- My -->
+    <string name="my_title">My page</string>
+    <string name="my_empty_title">Your profile is coming soon</string>
+    <string name="my_empty_body">You will be able to decorate your profile and set your interests here.</string>
 </resources>

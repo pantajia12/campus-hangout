@@ -1,4 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">CAU Buddy</string>
+
+    <!-- 하단 탭 -->
+    <string name="nav_home">홈</string>
+    <string name="nav_chats">채팅</string>
+    <string name="nav_friends">친구</string>
+    <string name="nav_my">마이</string>
+
+    <!-- 홈 -->
+    <string name="home_title">채팅방 둘러보기</string>
+    <string name="home_empty_title">아직 채팅방이 없어요</string>
+    <string name="home_empty_body">카테고리별 오픈채팅방이 이곳에 표시될 예정이에요.</string>
+
+    <!-- 채팅방 카테고리 (임시, Phase 3에서 서버 데이터로 교체) -->
+    <string name="category_all">전체</string>
+    <string name="category_hobby">취미</string>
+    <string name="category_study">스터디</string>
+    <string name="category_language_exchange">언어교환</string>
+    <string name="category_food">맛집</string>
+    <string name="category_travel">여행</string>
+    <string name="category_sports">운동</string>
+    <string name="category_k_culture">K-컬처</string>
+    <string name="category_campus_life">학교생활</string>
+
+    <!-- 채팅 -->
+    <string name="chats_title">내 채팅</string>
+    <string name="chats_empty_title">참여 중인 대화가 없어요</string>
+    <string name="chats_empty_body">홈에서 채팅방에 들어가면 대화가 이곳에 모여요.</string>
+
+    <!-- 친구 -->
+    <string name="friends_title">친구</string>
+    <string name="friends_empty_title">나와 맞는 친구 찾기</string>
+    <string name="friends_empty_body">관심사와 언어가 맞는 친구를 이곳에서 추천해 드릴 예정이에요.</string>
+
+    <!-- 마이 -->
+    <string name="my_title">마이페이지</string>
+    <string name="my_empty_title">프로필 준비 중</string>
+    <string name="my_empty_body">이곳에서 프로필을 꾸미고 관심 분야를 설정할 수 있어요.</string>
 </resources>
