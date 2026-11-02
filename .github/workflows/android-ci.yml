@@ -1,0 +1,42 @@
+name: android-ci
+
+on:
+  push:
+    branches: [main]
+    paths: ["android/**", ".github/workflows/android-ci.yml"]
+  pull_request:
+    paths: ["android/**", ".github/workflows/android-ci.yml"]
+
+concurrency:
+  group: android-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # GitHub 러너에는 Android SDK가 미리 설치되어 있고, 필요한 플랫폼은 AGP가 자동으로 받는다.
+      - name: Build, lint, unit test
+        run: ./gradlew assembleDebug lintDebug testDebugUnitTest --no-daemon
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-reports
+          path: |
+            android/app/build/reports/lint-results-debug.html
+            android/app/build/reports/tests/
+          if-no-files-found: ignore
