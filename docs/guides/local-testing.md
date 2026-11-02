@@ -41,6 +41,11 @@ Phase마다 새로 확인할 항목은 맨 아래 **Phase별 체크리스트**�
 3. 대상 폴더를 `C:\dev`로 바꾸고 압축을 풉니다.
 4. `C:\dev\campus-hangout` 안에 `android`, `server`, `docs`, `infra` 폴더가 보이면 정상입니다.
    - `C:\dev\campus-hangout-v0.0.3\campus-hangout`처럼 한 단계 더 들어가 있으면, 안쪽 `campus-hangout` 폴더를 `C:\dev`로 옮깁니다.
+5. PowerShell에서 아래 명령을 **한 번** 실행합니다. Windows는 리눅스식 실행 권한을 저장하지 못해서, 이 설정이 없으면 `gradlew` 파일이 수정된 것처럼 보입니다. (아래 "자주 나는 오류" 참고)
+   ```powershell
+   cd C:\dev\campus-hangout
+   git config core.fileMode false
+   ```
 
 ### Mac
 1. Finder에서 홈 폴더에 `dev` 폴더를 만듭니다.
@@ -271,6 +276,16 @@ $env:Path = "$env:JAVA_HOME\bin;$env:Path"
 ### `This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered`
 - 경고일 뿐 오류가 아닙니다. 설치한 Android Studio가 프로젝트의 Android Gradle Plugin(8.13)보다 새 버전이라서 나옵니다. 빌드 결과에는 영향이 없습니다.
 - 다만 이 때문에 명령줄 빌드가 SDK를 직접 설치하는 과정은 불안정할 수 있습니다. **SDK는 항상 Android Studio의 SDK Manager로 설치**하세요.
+
+### `git status`에 `modified: android/gradlew`, `server/gradlew`가 나올 때
+**원인**: 내용이 바뀐 게 아니라 **실행 권한 표시만 달라진 것**입니다. `git diff android/gradlew`를 실행하면 `old mode 100755` / `new mode 100644`만 보입니다. 저장소는 리눅스에서 만들어져 실행 권한까지 기록하는데, Windows는 이 권한을 저장하지 못합니다.
+
+**해결**: Git이 실행 권한 차이를 무시하도록 설정합니다. **이 변경을 커밋하면 안 됩니다.** 실행 권한이 빠진 채로 올라가면 GitHub Actions(리눅스)에서 `./gradlew`가 실행되지 않아 CI가 실패합니다.
+```powershell
+cd C:\dev\campus-hangout
+git config core.fileMode false
+git status        # nothing to commit, working tree clean
+```
 
 ### 테스트가 실패했을 때 원인 찾기
 1. 결과 보고서 `build/reports/tests/test/index.html`을 브라우저로 엽니다.
