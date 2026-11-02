@@ -1,0 +1,8 @@
+# 운영 설정 (Oracle Cloud VM, Nginx 뒤에서 실행)
+# 비밀값은 모두 환경 변수로 주입한다.
+server:
+  forward-headers-strategy: framework
+
+logging:
+  level:
+    root: INFO
