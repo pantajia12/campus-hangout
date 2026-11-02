@@ -19,6 +19,7 @@ Phase마다 새로 확인할 항목은 맨 아래 **Phase별 체크리스트**�
 - 설치 마법사에서 **Standard** 설치를 고르면 Android SDK와 에뮬레이터가 같이 설치됩니다.
 
 ### JDK 21
+- **반드시 21 버전**을 받습니다. 최신 버전(25, 26 등)으로 Gradle을 실행하면 빌드가 실패합니다. (아래 "자주 나는 오류" 참고)
 - **Windows**: `.msi` 설치 파일을 실행하고, 설치 옵션에서 **"Set JAVA_HOME variable"** 항목을 "설치"로 바꿉니다.
 - **Mac**: `.pkg` 설치 파일을 실행합니다.
 - 설치 후 새 터미널을 열고 아래 명령으로 확인합니다. `21`이 보이면 됩니다.
@@ -142,6 +143,37 @@ cd ~/dev/campus-hangout/server
    ```
 
 테스트가 실패하면 올리지 말고, 오류 메시지나 화면 캡처를 보내 주세요.
+
+---
+
+## 자주 나는 오류
+
+### `What went wrong:` 아래에 `26.0.2.1`처럼 숫자만 나올 때
+**원인**: Gradle이 JDK 21이 아닌 더 새로운 자바(25, 26 등)로 실행되었습니다. 지금 쓰는 Gradle 8.14는 자바 24까지만 실행을 지원하고, 새 버전 번호를 읽지 못해 그 번호만 출력하고 멈춥니다.
+
+**해결** (Windows PowerShell)
+1. 지금 쓰이는 자바를 확인합니다.
+   ```powershell
+   java -version
+   echo $env:JAVA_HOME
+   where.exe java
+   ```
+2. JDK 21이 없으면 adoptium.net에서 Temurin **21** 설치 파일(.msi)을 받아 설치합니다.
+3. 지금 열린 창에서만 JDK 21을 쓰도록 바꿉니다.
+   ```powershell
+   $env:JAVA_HOME = (Get-ChildItem "C:\Program Files\Eclipse Adoptium" -Directory -Filter "jdk-21*" | Select-Object -First 1).FullName
+   $env:Path = "$env:JAVA_HOME\bin;$env:Path"
+   java -version
+   ```
+4. 이전 자바로 켜진 Gradle을 끄고 다시 실행합니다.
+   ```powershell
+   .\gradlew.bat --stop
+   .\gradlew.bat test
+   ```
+5. 매번 3번을 하기 싫으면, Windows 검색에서 "시스템 환경 변수 편집"을 열고 **환경 변수**로 들어갑니다.
+   - **사용자 변수**와 **시스템 변수** 양쪽의 `JAVA_HOME`을 JDK 21 폴더로 바꿉니다. 사용자 변수가 시스템 변수보다 우선합니다.
+   - 바꾼 뒤에는 PowerShell을 새로 엽니다.
+   - 공용 PC라서 전역 설정을 바꾸기 곤란하면 3번 방법을 계속 씁니다.
 
 ---
 
