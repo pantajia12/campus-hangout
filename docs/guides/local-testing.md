@@ -133,7 +133,8 @@ cd ~/dev/campus-hangout/server
 2. 아래 명령으로 새 커밋을 가져옵니다. Windows는 PowerShell에서 실행합니다.
    ```bash
    cd C:\dev\campus-hangout        # Mac은 cd ~/dev/campus-hangout
-   git pull ../번들파일이름.bundle main
+   git pull --tags ../번들파일이름.bundle main   # --tags: 새 버전 태그도 같이 가져옴
+   git log --oneline -3                          # 맨 위에 새 커밋이 보이면 성공
    ```
 3. 위 C, D를 다시 해서 테스트합니다.
 4. 모두 통과하면 그때 올립니다.
@@ -174,6 +175,19 @@ cd ~/dev/campus-hangout/server
    - **사용자 변수**와 **시스템 변수** 양쪽의 `JAVA_HOME`을 JDK 21 폴더로 바꿉니다. 사용자 변수가 시스템 변수보다 우선합니다.
    - 바꾼 뒤에는 PowerShell을 새로 엽니다.
    - 공용 PC라서 전역 설정을 바꾸기 곤란하면 3번 방법을 계속 씁니다.
+
+### 터미널에 테스트 이름이 `?덉긽?섏?`처럼 깨져 보일 때
+**원인**: 테스트 이름(한글)은 UTF-8로 출력되는데, PowerShell 창은 한국어 Windows 기본 인코딩(CP949)으로 읽어서 생기는 표시 문제입니다. 테스트 결과에는 영향이 없습니다.
+
+**해결**: 테스트 전에 아래 명령을 한 번 실행합니다. 또는 결과 보고서(`build/reports/tests/test/index.html`)를 브라우저로 열면 한글이 정상으로 보입니다.
+```powershell
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+```
+
+### 테스트가 실패했을 때 원인 찾기
+1. 결과 보고서 `build/reports/tests/test/index.html`을 브라우저로 엽니다.
+2. 실패한 테스트를 누르면 **어느 줄에서, 무엇을 기대했는데 무엇이 나왔는지**가 보입니다. 예: `Status expected:<409> but was:<404>`
+3. 그 내용을 복사해서 보내 주세요.
 
 ---
 

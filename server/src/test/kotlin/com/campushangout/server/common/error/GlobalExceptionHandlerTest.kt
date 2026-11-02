@@ -6,15 +6,17 @@ import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.RestController
 
 class GlobalExceptionHandlerTest {
 
     /**
      * 예외를 일부러 던지는 테스트 전용 컨트롤러.
-     * @RestController를 붙이지 않아 @SpringBootTest의 컴포넌트 스캔에 잡히지 않는다.
+     *
+     * Spring 6부터는 @Controller(또는 @RestController)가 붙은 클래스만 컨트롤러로 인식한다.
+     * 클래스에 @RequestMapping만 있으면 요청 경로가 등록되지 않아 404가 난다.
      */
-    @ResponseBody
+    @RestController
     @RequestMapping("/test")
     class ThrowingController {
 
