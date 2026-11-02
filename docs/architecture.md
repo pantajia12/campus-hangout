@@ -1,4 +1,4 @@
-# 아키텍처 (초안)
+# Campus Hangout 아키텍처 (초안)
 
 > Phase 0 기준 초안입니다. 각 Phase를 진행하면서 실제 구현에 맞게 고쳐 나갑니다.
 
@@ -8,19 +8,22 @@
 [Android 앱] ──REST(HTTPS)──┐
              ──WebSocket────┤
                             ▼
-                     [Nginx (운영)]
-                            ▼
-              [Spring Boot 서버 (Kotlin)]
-               │        │          │
-        PostgreSQL    Redis    Object Storage
-        (주 데이터)  (채팅 Pub/Sub,  (이미지, 학생증)
-                      캐시)
+  ┌──────── Azure VM (B1s) ─────────┐
+  │  [Nginx] → [Spring Boot 서버]    │
+  │                 │     [Redis]    │   (채팅 Pub/Sub, 캐시)
+  └─────────────────┼────────────────┘
+                    │
+        ┌───────────┴───────────┐
+  Azure Database          Azure Blob Storage
+  for PostgreSQL          (이미지, 학생증)
+  (주 데이터, 관리형)
 
 외부 API: FCM 푸시(Phase 6), 번역 API(Phase 6)
 ```
 
 - 서버는 JWT를 써서 상태를 들고 있지 않습니다(stateless). 사용자가 늘면 서버를 여러 대로 늘릴 수 있고, 채팅 메시지는 Redis Pub/Sub로 서버끼리 전달합니다.
-- 운영 환경은 Oracle Cloud Always Free VM 1대에서 Docker Compose로 띄웁니다.
+- 운영 환경은 Azure for Students입니다. VM 1대(B1s, 메모리 1GB)에서 Nginx·서버·Redis를 Docker Compose로 띄우고, DB는 관리형 PostgreSQL, 파일은 Blob Storage를 씁니다.
+- 로컬 개발 환경은 `infra/docker-compose.yml`의 PostgreSQL·Redis를 씁니다. 서버 코드는 설정(프로필)만 바꿔서 두 환경에서 똑같이 동작하게 만듭니다.
 
 ## 2. 패키지 구조
 
@@ -32,7 +35,7 @@ com.campushangout.server
 ├── user/          # 계정, 계정 상태                       (Phase 1)
 ├── verification/  # 학생증 제출·심사                      (Phase 1)
 ├── admin/         # 관리자 전용 API                       (Phase 1~)
-├── storage/       # 파일 저장소 추상화 (로컬/Object Storage) (Phase 1)
+├── storage/       # 파일 저장소 추상화 (로컬 디스크/Azure Blob) (Phase 1)
 ├── profile/       # 프로필, 관심사, 언어                  (Phase 2)
 ├── room/          # 채팅방                                (Phase 3)
 ├── chat/          # 메시지, WebSocket                     (Phase 4)
@@ -237,7 +240,7 @@ erDiagram
 
 ## 6. 개인정보 처리 원칙
 
-- 학생증 이미지는 **비공개 버킷**에 저장하고, 관리자만 짧게 만료되는 임시 URL로 볼 수 있습니다. 심사가 끝나면 삭제합니다.
+- 학생증 이미지는 **비공개 Blob 컨테이너**에 저장하고, 관리자만 짧게 만료되는 임시 URL(SAS)로 볼 수 있습니다. 심사가 끝나면 삭제합니다.
 - 학번 원문은 저장하지 않습니다. 중복 가입을 막는 데 필요한 해시(서버 비밀값을 섞은 HMAC)와 화면 표시용 입학 연도만 보관합니다.
 - 비밀번호는 BCrypt로 해시합니다.
 - 탈퇴하면 계정을 soft delete로 처리하고, 개인 식별 정보는 지웁니다.

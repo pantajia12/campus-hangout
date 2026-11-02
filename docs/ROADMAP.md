@@ -1,10 +1,14 @@
-# 로드맵 (v2)
+# Campus Hangout 로드맵 (v3)
 
-> v1과 달라진 점
+> v3에서 달라진 점
+> - 앱 이름 확정: **Campus Hangout** (패키지 `com.campushangout`)
+> - 인프라: Oracle Cloud 대신 **Azure for Students** (학교 메일 인증만으로 가입, 카드 불필요)
+>   - VM B1s 1대 + 관리형 PostgreSQL + Blob Storage, 모두 12개월 무료 범위
+>
+> v2에서 달라진 점
 > - 가입: 학교 메일 인증 대신 **학생증 사진 + 학번 제출 → 관리자 승인** (에브리타임·노크 방식)
 > - **익명 / 실명 기능 모두 지원** (방 단위로 익명방·실명방 선택)
 > - 언어: 앱과 서버 모두 **Kotlin**
-> - 인프라: **Oracle Cloud Always Free** (무료 VM 1대 + 무료 Object Storage)
 > - 메일(SMTP) 발송은 필수 기능에서 제외했습니다. 승인 결과는 앱 화면에서 보여 주고, Phase 6부터는 푸시 알림으로도 알려 줍니다.
 
 ## 개발 방식: 큰 틀 → 세부
@@ -58,10 +62,13 @@ Phase 0–4가 끝나면 과제의 필수 요구사항을 모두 충족합니다
 - 서버
   - 가입(학생증 업로드 포함), 로그인(JWT access/refresh), 토큰 재발급(rotation), 로그아웃, 내 계정 상태 조회, 재제출, 탈퇴
   - 관리자: 심사 대기 목록, 상세(학생증 이미지는 만료되는 임시 URL로만 열람), 승인/반려
-  - 파일 저장소 추상화: `StorageService` 인터페이스 (로컬=디스크, 운영=OCI Object Storage)
+  - 파일 저장소 추상화: `StorageService` 인터페이스 (로컬=디스크, 운영=Azure Blob Storage)
 - 앱: Hilt·Retrofit 도입, 토큰 암호화 저장, 가입 3단계 화면, 승인 대기·반려 화면, 관리자 전용 심사 화면
-- 인프라: Oracle Cloud VM에 첫 배포 (이때부터 실기기 여러 대로 테스트)
-- 개인정보: 학생증 이미지는 비공개 버킷에 저장하고 심사 후 삭제합니다. 학번은 중복 가입 방지용 해시와 입학 연도만 보관합니다.
+- 인프라: Azure에 첫 배포 (이때부터 실기기 여러 대로 테스트)
+  - VM(B1s)에 Nginx + 서버 + Redis, DB는 Azure Database for PostgreSQL
+  - VM 메모리가 1GB라서 JVM 힙 제한(약 384MB)과 스왑 2GB 설정
+  - GitHub Actions에서 서버 이미지를 빌드해 VM에 배포하는 스크립트
+- 개인정보: 학생증 이미지는 비공개 컨테이너에 저장하고 심사 후 삭제합니다. 학번은 중복 가입 방지용 해시와 입학 연도만 보관합니다.
 - 완료 기준: 가입 → 승인 → 로그인 → 자동 로그인, 반려 → 재제출 흐름 동작, 인증 API 통합 테스트 통과
 
 ## Phase 2 — 프로필 꾸미기 · 관심사 → `v0.2.0`
@@ -110,7 +117,7 @@ Phase 0–4가 끝나면 과제의 필수 요구사항을 모두 충족합니다
 
 ## Phase 7 — 운영 배포 · 품질 · 출시 → `v1.0.0`
 
-- 운영: HTTPS(Nginx + Let's Encrypt), main 머지 시 자동 배포, DB 백업(Object Storage로 덤프)
+- 운영: HTTPS(Nginx + Let's Encrypt), main 머지 시 자동 배포, DB 백업(관리형 PostgreSQL 자동 백업 + 주기적 덤프를 Blob에 보관)
 - 품질: 부하 테스트(k6), 에러 로그 수집, 다크모드·접근성 점검, 디자인 다듬기
 - 출시: 서명된 APK/AAB, README, 시연 영상, 발표 자료
 
@@ -124,14 +131,15 @@ Phase 0–4가 끝나면 과제의 필수 요구사항을 모두 충족합니다
 
 ---
 
-## 무료 클라우드 자원 배분 계획
+## 무료 클라우드 자원 배분 계획 (Azure for Students)
 
-Oracle Cloud Always Free 한도: Ampere A1 합계 2 OCPU / 12GB 메모리, 블록 스토리지 200GB, Object Storage 20GB
+학생 구독 혜택: 크레딧 US$100 (12개월, 재학 중 매년 갱신) + 12개월 무료 서비스
 
-| 자원 | 용도 |
-|---|---|
-| A1 VM 1대 (2 OCPU / 12GB) | Nginx + 서버 + PostgreSQL + Redis (Docker Compose) |
-| 블록 스토리지 | 부트 볼륨 + DB 데이터 |
-| Object Storage | 프로필·채팅 이미지(공개 버킷), 학생증 이미지(비공개 버킷), DB 백업 |
+| 자원 | 무료 범위 | 용도 |
+|---|---|---|
+| VM B1s 1대 (1 vCPU / 1GB) | 월 750시간 | Nginx + 서버 + Redis (Docker Compose) |
+| PostgreSQL Flexible Server B1MS | 월 750시간 + 32GB | 주 데이터베이스 |
+| Blob Storage | 5GB | 프로필·채팅 이미지(공개), 학생증 이미지(비공개), DB 덤프 |
 
-가입 방법은 [docs/guides/oracle-cloud-setup.md](guides/oracle-cloud-setup.md)를 보세요.
+무료 범위를 넘는 사용(트래픽 등)은 크레딧에서 빠지고, 카드가 없으니 요금이 청구되지는 않습니다.
+가입 방법과 대안(Render + Neon)은 [docs/guides/azure-for-students-setup.md](guides/azure-for-students-setup.md)를 보세요.

@@ -22,5 +22,14 @@ docker compose down -v    # 종료 + 데이터 삭제
 
 ## 운영 환경
 
-Oracle Cloud Always Free VM에 배포합니다. Phase 1에서 배포 스크립트와 운영용 Compose 파일을 추가합니다.
-계정 만들기는 [docs/guides/oracle-cloud-setup.md](../docs/guides/oracle-cloud-setup.md)를 보세요.
+Azure for Students에 배포합니다.
+
+| 로컬 | 운영 (Azure) |
+|---|---|
+| PostgreSQL 컨테이너 | Azure Database for PostgreSQL (관리형) |
+| Redis 컨테이너 | VM 안의 Redis 컨테이너 |
+| 서버 로컬 실행 | VM 안의 서버 컨테이너 + Nginx |
+| 로컬 디스크 | Azure Blob Storage |
+
+Phase 1에서 배포 스크립트와 운영용 Compose 파일을 추가합니다.
+계정 만들기는 [docs/guides/azure-for-students-setup.md](../docs/guides/azure-for-students-setup.md)를 보세요.

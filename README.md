@@ -16,7 +16,7 @@
 
 | Phase | 내용 | 상태 |
 |---|---|---|
-| 0 | 프로젝트 뼈대 | ✅ `v0.0.1` |
+| 0 | 프로젝트 뼈대 | ✅ `v0.0.2` |
 | 1 | 학생증 인증 가입 · 로그인 · 관리자 승인 | ⏳ 다음 |
 | 2 | 프로필 꾸미기 · 관심사 | |
 | 3 | 카테고리 오픈채팅방 (익명/실명) | |
@@ -34,7 +34,7 @@
 | 앱 | Kotlin, Jetpack Compose, Material 3, Navigation Compose |
 | 서버 | Kotlin, Spring Boot 4, JDK 21 |
 | DB | PostgreSQL 17, Redis 7 |
-| 인프라 | Docker Compose, Oracle Cloud Always Free, GitHub Actions |
+| 인프라 | Docker Compose, Azure for Students (VM · PostgreSQL · Blob Storage), GitHub Actions |
 
 ## 저장소 구조
 
@@ -66,4 +66,4 @@ curl http://localhost:8080/api/v1/ping
 - [개발 규칙 (Git, API, 코드 스타일)](docs/conventions.md)
 - [아키텍처 · ERD · 익명/실명 설계](docs/architecture.md)
 - [디자인 토큰](docs/design/tokens.md)
-- [Oracle Cloud 무료 계정 가입](docs/guides/oracle-cloud-setup.md)
+- [Azure for Students 가입과 무료 자원](docs/guides/azure-for-students-setup.md)
