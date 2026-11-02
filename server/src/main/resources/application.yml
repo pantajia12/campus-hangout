@@ -1,6 +1,6 @@
 spring:
   application:
-    name: cau-buddy-server
+    name: campus-hangout-server
   profiles:
     default: local
 

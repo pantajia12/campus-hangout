@@ -1,6 +1,6 @@
-package com.caubuddy.server.common.error
+package com.campushangout.server.common.error
 
-import com.caubuddy.server.common.response.ApiResponse
+import com.campushangout.server.common.response.ApiResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException

@@ -1,6 +1,6 @@
-package com.caubuddy.server.common.response
+package com.campushangout.server.common.response
 
-import com.caubuddy.server.common.error.ErrorCode
+import com.campushangout.server.common.error.ErrorCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

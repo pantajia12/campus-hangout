@@ -1,10 +1,10 @@
-package com.caubuddy.server
+package com.campushangout.server
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class CauBuddyServerApplicationTests {
+class CampusHangoutServerApplicationTests {
 
     @Test
     fun contextLoads() {

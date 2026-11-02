@@ -1,1 +1,1 @@
-rootProject.name = "cau-buddy-server"
+rootProject.name = "campus-hangout-server"

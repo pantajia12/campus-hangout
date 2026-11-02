@@ -1,6 +1,6 @@
-package com.caubuddy.server.common.ping
+package com.campushangout.server.common.ping
 
-import com.caubuddy.server.common.response.ApiResponse
+import com.campushangout.server.common.response.ApiResponse
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController

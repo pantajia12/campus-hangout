@@ -1,6 +1,6 @@
-package com.caubuddy.server.common.ping
+package com.campushangout.server.common.ping
 
-import com.caubuddy.server.common.error.GlobalExceptionHandler
+import com.campushangout.server.common.error.GlobalExceptionHandler
 import org.junit.jupiter.api.Test
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get

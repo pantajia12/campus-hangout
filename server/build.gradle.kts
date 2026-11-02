@@ -5,9 +5,9 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "com.caubuddy"
+group = "com.campushangout"
 version = "0.0.1"
-description = "CAU Buddy API server"
+description = "Campus Hangout API server"
 
 java {
     toolchain {

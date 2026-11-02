@@ -1,4 +1,4 @@
-package com.caubuddy.server.common.error
+package com.campushangout.server.common.error
 
 /**
  * 비즈니스 규칙 위반을 나타내는 예외.

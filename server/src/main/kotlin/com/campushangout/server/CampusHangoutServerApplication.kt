@@ -1,11 +1,11 @@
-package com.caubuddy.server
+package com.campushangout.server
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class CauBuddyServerApplication
+class CampusHangoutServerApplication
 
 fun main(args: Array<String>) {
-    runApplication<CauBuddyServerApplication>(*args)
+    runApplication<CampusHangoutServerApplication>(*args)
 }

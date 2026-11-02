@@ -1,4 +1,4 @@
-package com.caubuddy.server.common.error
+package com.campushangout.server.common.error
 
 import org.junit.jupiter.api.Test
 import org.springframework.test.web.servlet.MockMvc
