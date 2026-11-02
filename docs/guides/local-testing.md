@@ -171,6 +171,7 @@ cd ~/dev/campus-hangout/server
 
 **단위 테스트 + 린트를 명령으로 한 번에**
 아래쪽 **Terminal** 탭(PowerShell, `android` 폴더에서 열림)에서 실행합니다. 이 창에도 JDK 21 설정이 필요합니다.
+**Android Studio의 동기화·빌드가 완전히 끝난 뒤에** 실행하세요. 둘이 동시에 돌면 SDK 설치가 서로 부딪혀 실패할 수 있습니다.
 ```powershell
 $env:JAVA_HOME = (Get-ChildItem "C:\Program Files\Eclipse Adoptium" -Directory -Filter "jdk-21*" | Select-Object -First 1).FullName
 $env:Path = "$env:JAVA_HOME\bin;$env:Path"
@@ -241,6 +242,35 @@ $env:Path = "$env:JAVA_HOME\bin;$env:Path"
 ```powershell
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 ```
+
+### `Failed to install the following SDK components: platforms;android-36` (SDK 설치 실패)
+함께 보이는 문구: `FileAlreadyExistsException ... Sdk\.temp\PackageOperation01\...`
+
+**원인**
+- 앱은 Android 16(API 36) SDK로 빌드하는데, 이 SDK가 아직 설치되지 않은 상태였습니다.
+- 그래서 명령줄 빌드가 직접 내려받으려다, SDK 임시 폴더(`Sdk\.temp`)에 이전 설치 파일이 남아 있어 실패했습니다.
+- 임시 파일은 Android Studio가 같은 SDK를 동시에 설치하고 있었거나, 이전 설치가 중간에 끊긴 경우에 남습니다.
+
+**해결**
+1. Android Studio를 닫고, PowerShell에서 Gradle 백그라운드 프로세스를 끕니다.
+   ```powershell
+   cd C:\dev\campus-hangout\android
+   .\gradlew.bat --stop
+   ```
+2. 남은 임시 폴더를 지웁니다.
+   ```powershell
+   Remove-Item -Recurse -Force "$env:LOCALAPPDATA\Android\Sdk\.temp"
+   ```
+3. Android Studio를 다시 열고 `Ctrl + Alt + S` → Languages & Frameworks → Android SDK → **SDK Platforms** 탭에서 **API Level 36 (Android 16)** 을 체크 → Apply → 설치가 끝나면 Finish
+4. 설치를 확인합니다. 목록에 `android-36`이 보이면 됩니다.
+   ```powershell
+   Get-ChildItem "$env:LOCALAPPDATA\Android\Sdk\platforms"
+   ```
+5. Android Studio에서 다시 동기화(코끼리 아이콘)하고, 끝난 뒤에 명령줄 테스트를 실행합니다.
+
+### `This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered`
+- 경고일 뿐 오류가 아닙니다. 설치한 Android Studio가 프로젝트의 Android Gradle Plugin(8.13)보다 새 버전이라서 나옵니다. 빌드 결과에는 영향이 없습니다.
+- 다만 이 때문에 명령줄 빌드가 SDK를 직접 설치하는 과정은 불안정할 수 있습니다. **SDK는 항상 Android Studio의 SDK Manager로 설치**하세요.
 
 ### 테스트가 실패했을 때 원인 찾기
 1. 결과 보고서 `build/reports/tests/test/index.html`을 브라우저로 엽니다.
