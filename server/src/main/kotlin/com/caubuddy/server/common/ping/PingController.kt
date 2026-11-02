@@ -1,5 +1,6 @@
 package com.caubuddy.server.common.ping
 
+import com.caubuddy.server.common.response.ApiResponse
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -14,7 +15,8 @@ import java.time.Instant
 class PingController {
 
     @GetMapping("/ping")
-    fun ping(): PingResponse = PingResponse(status = "ok", serverTime = Instant.now())
+    fun ping(): ApiResponse<PingResponse> =
+        ApiResponse.ok(PingResponse(status = "ok", serverTime = Instant.now()))
 }
 
 data class PingResponse(
