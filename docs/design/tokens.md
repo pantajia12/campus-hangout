@@ -1,7 +1,7 @@
 # 디자인 토큰
 
 Figma와 앱 코드가 같은 값을 쓰도록 여기서 관리합니다.
-코드 위치: `android/app/src/main/java/com/caubuddy/android/designsystem/theme/`
+코드 위치: `android/app/src/main/java/com/campushangout/android/designsystem/theme/`
 
 ## 색 (Color.kt)
 
@@ -59,7 +59,7 @@ Figma와 앱 코드가 같은 값을 쓰도록 여기서 관리합니다.
 
 | 컴포넌트 | 설명 |
 |---|---|
-| `CbTopAppBar` | 화면 상단 바 |
+| `ChTopAppBar` | 화면 상단 바 |
 | `EmptyState` | 데이터가 없을 때 아이콘 + 제목 + 설명 |
 
-새 공통 컴포넌트는 `designsystem/component/`에 `Cb` 접두어를 붙여 추가합니다.
+새 공통 컴포넌트는 `designsystem/component/`에 `Ch`(Campus Hangout) 접두어를 붙여 추가합니다. 예: `ChButton`, `ChProfileCard`

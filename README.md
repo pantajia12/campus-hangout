@@ -1,4 +1,4 @@
-# CAU Buddy (가칭)
+# Campus Hangout
 
 중앙대학교 학생이 **관심사가 같은 외국인 친구**, **같이 공부할 친구**를 찾는 앱입니다.
 카카오톡 오픈채팅처럼 카테고리별 채팅방을 만들고 참여할 수 있고, 학생증 인증을 거친 학생만 가입할 수 있습니다.
@@ -39,7 +39,7 @@
 ## 저장소 구조
 
 ```
-cau-buddy/
+campus-hangout/
 ├── android/   # Android 앱 → android/README.md
 ├── server/    # API + 채팅 서버 → server/README.md
 ├── infra/     # Docker Compose 등 → infra/README.md

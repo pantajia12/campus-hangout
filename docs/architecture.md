@@ -26,7 +26,7 @@
 
 ### 서버 (`server/`)
 ```
-com.caubuddy.server
+com.campushangout.server
 ├── common/        # 응답 포맷, 예외 처리, 공통 설정       (Phase 0)
 ├── auth/          # 로그인, JWT 발급·재발급               (Phase 1)
 ├── user/          # 계정, 계정 상태                       (Phase 1)
@@ -42,7 +42,7 @@ com.caubuddy.server
 
 ### 앱 (`android/`)
 ```
-com.caubuddy.android
+com.campushangout.android
 ├── designsystem/  # 테마(색·글꼴·간격), 공통 컴포넌트   (Phase 0~)
 ├── navigation/    # 하단 탭, 라우트                     (Phase 0~)
 ├── feature/
