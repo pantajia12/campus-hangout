@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "com.caubuddy.android"
+    namespace = "com.campushangout.android"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.caubuddy.android"
+        applicationId = "com.campushangout.android"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

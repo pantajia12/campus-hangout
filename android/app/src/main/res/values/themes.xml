@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 화면 색상은 Compose 테마(designsystem)에서 관리한다. 여기는 창(window) 기본 테마만 지정. -->
-    <style name="Theme.CauBuddy" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.CampusHangout" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

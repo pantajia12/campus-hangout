@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CAU Buddy</string>
+    <string name="app_name">Campus Hangout</string>
 
     <!-- 하단 탭 -->
     <string name="nav_home">홈</string>

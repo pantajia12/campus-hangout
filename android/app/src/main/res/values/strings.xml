@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 기본(영어) 문자열. 한국어는 values-ko/strings.xml. 키를 추가하면 두 파일에 모두 넣는다. -->
 <resources>
-    <string name="app_name">CAU Buddy</string>
+    <string name="app_name">Campus Hangout</string>
 
     <!-- Bottom navigation -->
     <string name="nav_home">Home</string>
