@@ -88,41 +88,99 @@ cd ~/dev/campus-hangout/server
 
 ## D. 앱 테스트 (Android Studio)
 
-### 1) 프로젝트 열기
-1. Android Studio를 실행하고 **Open**을 누릅니다.
-2. **`campus-hangout` 안의 `android` 폴더**를 고릅니다. 최상위 `campus-hangout` 폴더가 아닙니다.
-3. 프로젝트를 신뢰할지 물으면 **Trust Project**를 누릅니다.
-4. 오른쪽 아래에 Gradle 동기화 진행 표시가 나옵니다. 처음에는 5~10분 걸립니다.
+> 메뉴 위치는 Android Studio 버전마다 조금씩 다릅니다. 새 화면(새 UI)에서는 왼쪽 위 **≡ 아이콘** 안에 File, Tools 같은 메뉴가 있습니다. 설정 창은 어디서든 `Ctrl + Alt + S`로 열립니다.
 
-동기화 중에 나올 수 있는 것
+### 1) Android Studio 설치 (처음 한 번)
+1. developer.android.com/studio에서 Windows용 설치 파일을 받아 실행합니다.
+2. 구성 요소 선택 화면에서 **Android Studio**와 **Android Virtual Device**가 둘 다 체크되어 있는지 확인합니다.
+3. 처음 실행하면 설정 마법사가 뜹니다.
+   - 이전 설정 가져오기: **Do not import settings**(가져오지 않음)
+   - 설치 유형: **Standard**
+   - 라이선스 화면: 왼쪽 목록 항목을 하나씩 눌러 **모두 Accept** → Finish
+   - SDK를 내려받는 데 몇 분 걸리고, 끝나면 시작 화면이 나옵니다.
 
-| 화면 | 할 일 |
+### 2) 프로젝트 열기
+1. 시작 화면에서 **Open**을 누릅니다. (다른 프로젝트가 열려 있으면 File → Open)
+2. `C:\dev\campus-hangout\android`를 고르고 OK를 누릅니다. **최상위 `campus-hangout`이 아니라 그 안의 `android` 폴더**입니다.
+3. 신뢰 여부를 물으면 **Trust Project**를 누릅니다.
+4. 자동으로 Gradle 동기화(Sync)가 시작됩니다. 오른쪽 아래 상태 표시줄에 진행 상황이 나오고, 처음에는 5~10분 걸립니다.
+
+### 3) Gradle JDK를 21로 맞추기 (중요)
+서버에서처럼 Gradle이 21보다 새로운 자바로 돌면 동기화가 실패합니다. 프로젝트를 처음 열었을 때 한 번 확인합니다.
+1. `Ctrl + Alt + S` → **Build, Execution, Deployment → Build Tools → Gradle**
+2. **Gradle JDK** 목록에서 버전이 **21**인 항목을 고릅니다. (예: `jbr-21`, `temurin-21`)
+   - 21이 없으면 **Add JDK from disk...** → `C:\Program Files\Eclipse Adoptium\jdk-21...` 폴더 선택
+3. OK → 오른쪽 위 **코끼리 아이콘(Sync Project with Gradle Files)** 또는 File → Sync Project with Gradle Files로 다시 동기화합니다.
+
+**성공 확인**: 아래쪽 **Build** 창(망치 아이콘)의 Sync 탭에 빨간 오류 없이 초록 체크가 보이면 됩니다.
+
+| 동기화 중 나오는 것 | 할 일 |
 |---|---|
-| Android Gradle Plugin 업그레이드 제안 | 닫습니다. 버전은 Phase가 끝날 때 한꺼번에 올립니다 |
-| SDK(API 36)가 없다는 오류 | 오류 메시지 안의 설치 링크를 누르거나, Tools → SDK Manager에서 **Android 16 (API 36)** 을 체크하고 설치 |
+| Android Gradle Plugin 업그레이드 제안 | 닫거나 "Remind me tomorrow". 업그레이드하지 않습니다 |
+| `26.0.2.1`처럼 숫자만 있는 오류 | 위 3)에서 Gradle JDK를 21로 바꾸고 다시 동기화 |
+| API 36 SDK가 없다는 오류 | 오류 안의 설치 링크를 누르거나, `Ctrl + Alt + S` → Languages & Frameworks → Android SDK → SDK Platforms에서 **Android 16 (API 36)** 체크 → Apply |
+| 그 밖의 빨간 오류 | Build 창의 오류 내용을 전부 복사해서 보내 주세요 |
 
-### 2) 실행할 기기 준비 (둘 중 하나)
-**에뮬레이터**
-1. 오른쪽 세로 막대의 **Device Manager**(휴대폰 아이콘)를 엽니다.
-2. **+** → **Create Virtual Device** → Pixel 기종을 고릅니다.
-3. 시스템 이미지는 API 35 또는 36을 내려받아 고르고 Finish를 누릅니다.
-4. 에뮬레이터가 켜지지 않으면 BIOS의 가상화 기능(Intel VT-x / AMD-V)이 켜져 있는지 확인합니다.
+### 4) 실행할 기기 준비
 
-**실제 휴대폰** (Android 8.0 이상)
-1. 설정 → 휴대전화 정보 → 소프트웨어 정보 → 빌드번호를 7번 눌러 개발자 옵션을 켭니다.
-2. 개발자 옵션에서 **USB 디버깅**을 켭니다.
-3. USB로 연결하고, 휴대폰에 뜨는 허용 창에서 확인을 누릅니다.
+**방법 A: 에뮬레이터 (PC 안의 가상 휴대폰)**
+1. **가상화 확인**: 작업 관리자(`Ctrl + Shift + Esc`) → 성능 → CPU에서 **가상화: 사용**인지 봅니다. "사용 안 함"이면 BIOS에서 Intel VT-x 또는 AMD SVM을 켜야 합니다. (연구실 PC면 관리자에게 문의)
+2. Windows 검색 → **Windows 기능 켜기/끄기** → **Windows 하이퍼바이저 플랫폼** 체크 → 재부팅 (이미 켜져 있으면 넘어갑니다)
+3. Android Studio 오른쪽 세로 막대의 **Device Manager**(휴대폰 아이콘)를 엽니다. 없으면 View → Tool Windows → Device Manager.
+4. **+** → **Create Virtual Device**(버전에 따라 Add Device)
+5. 기기: Phone 분류에서 **Pixel** 기종 아무거나
+6. 시스템 이미지: **API 36 (Android 16)** 또는 **API 35 (Android 15)** 의 **x86_64** 이미지를 다운로드 아이콘으로 받은 뒤 선택
+7. Finish → 목록에 생긴 기기의 ▶를 누르면 에뮬레이터 창이 켜집니다. 첫 부팅은 1~3분 걸립니다.
+8. **에뮬레이터 기본 언어는 영어**입니다. 한국어로 보려면 에뮬레이터 안에서 Settings → System → Languages → System languages → Add a language → 한국어 → 오른쪽 손잡이(≡)를 끌어 맨 위로 올립니다.
 
-### 3) 실행
-상단 도구 막대에서 실행 대상이 `app`인지, 기기가 맞는지 확인하고 ▶(Run, `Shift + F10`)를 누릅니다.
+**방법 B: 실제 안드로이드 폰 (Android 8.0 이상)**
+1. 설정 → 휴대전화 정보 → 소프트웨어 정보 → **빌드번호**를 7번 누릅니다. "개발자 모드가 켜졌습니다"가 뜹니다.
+2. 설정 → **개발자 옵션** → **USB 디버깅** 켜기
+3. **데이터 전송이 되는 USB 케이블**로 연결하고, 폰에 뜨는 "USB 디버깅을 허용하시겠습니까?"에서 **허용**
+4. Android Studio 위쪽 기기 목록에 폰 이름이 보이면 준비 완료
+   - 안 보이면: 케이블 교체, 폰의 USB 연결 방식을 "파일 전송"으로, 삼성 폰은 "Samsung Android USB Driver" 설치
 
-### 4) 자동 테스트
-- 왼쪽 프로젝트 창에서 `app/src/test/java/.../navigation/TopLevelDestinationTest`를 마우스 오른쪽으로 누르고 **Run**을 고릅니다.
-- 아래 실행 창에 테스트가 모두 초록색이면 통과입니다.
-- 린트 검사는 아래쪽 **Terminal** 탭에서 실행합니다. `BUILD SUCCESSFUL`이 나오면 통과입니다.
-  ```powershell
-  .\gradlew.bat lintDebug    # Mac은 ./gradlew lintDebug
-  ```
+### 5) 앱 실행
+1. 위쪽 도구 막대에서 실행 대상이 **app**, 기기가 방금 준비한 에뮬레이터나 폰인지 확인합니다.
+2. **▶ Run 'app'** (`Shift + F10`)을 누릅니다.
+3. 아래 Build 창에서 빌드가 진행되고(처음 1~3분), 끝나면 기기에서 앱이 자동으로 켜집니다.
+4. **앱이 켜지자마자 꺼지면**: 아래쪽 **Logcat** 창 → 위 검색칸에 `package:mine level:error` 입력 → 빨간 `FATAL EXCEPTION` 부분을 복사해서 보내 주세요.
+
+### 6) 화면 확인 체크리스트
+
+| # | 확인할 것 | 하는 방법 | 기대 결과 |
+|---|---|---|---|
+| 1 | 첫 화면 | 앱 실행 직후 | 제목 "채팅방 둘러보기"(영어: Explore rooms), 가운데 말풍선 아이콘과 "아직 채팅방이 없어요"(No rooms yet), 하단 탭 4개 중 **홈**이 파란색 |
+| 2 | 카테고리 칩 | 제목 아래 칩 줄을 왼쪽으로 밀기 | 전체·취미·스터디·언어교환·맛집·여행·운동·K-컬처·학교생활 9개, 처음엔 "전체"가 연한 파란 배경 |
+| 3 | 칩 선택 | "여행" 누르기 | 연한 파란 배경이 "여행"으로 옮겨감 |
+| 4 | 탭 이동 | 채팅 → 친구 → 마이 차례로 누르기 | 제목이 "내 채팅", "친구", "마이페이지"로 바뀌고, 누른 탭만 파란색 |
+| 5 | 탭 상태 유지 | "여행" 선택 → 친구 탭 → 다시 홈 | "여행"이 계속 선택되어 있음 |
+| 6 | 뒤로 가기 | 친구 탭에서 뒤로 가기 | 홈으로 돌아옴. 홈에서 한 번 더 누르면 앱이 닫힘 |
+| 7 | 화면 회전 | 에뮬레이터 오른쪽 막대의 회전 버튼 (화면이 안 돌면 하단에 뜨는 회전 아이콘을 누르거나 빠른 설정에서 자동 회전 켜기) | 가로 화면에서도 깨지지 않고 "여행" 선택이 유지됨 |
+| 8 | 다크 테마 | 설정 → 디스플레이 → 다크 테마 켜기 | 배경이 거의 검정, 글자는 밝은색, 선택된 탭은 연한 파란색 |
+| 9 | 언어 | 시스템 언어를 영어 ↔ 한국어로 바꾸기 | 모든 문구가 해당 언어로 바뀜. 앱 이름은 둘 다 "Campus Hangout" |
+| 10 | 앱 아이콘 | 기기의 앱 목록 | 파란 원 안에 흰 말풍선 두 개, 이름 "Campus Hangout" |
+| 11 | 화면 가장자리 | 맨 위 상태 표시줄, 맨 아래 제스처 막대 주변 | 제목과 탭이 가려지거나 겹치지 않음 |
+
+### 7) 자동 테스트와 린트
+**단위 테스트 (2개)**
+1. 왼쪽 프로젝트 창 위쪽의 보기 방식을 **Android**로 둡니다.
+2. app → kotlin+java(또는 java) → **com.campushangout.android (test)** → navigation → **TopLevelDestinationTest**
+3. 마우스 오른쪽 → **Run 'TopLevelDestinationTest'**
+4. 아래 Run 창에 **Tests passed: 2**가 나오면 통과입니다.
+
+**단위 테스트 + 린트를 명령으로 한 번에**
+아래쪽 **Terminal** 탭(PowerShell, `android` 폴더에서 열림)에서 실행합니다. 이 창에도 JDK 21 설정이 필요합니다.
+```powershell
+$env:JAVA_HOME = (Get-ChildItem "C:\Program Files\Eclipse Adoptium" -Directory -Filter "jdk-21*" | Select-Object -First 1).FullName
+$env:Path = "$env:JAVA_HOME\bin;$env:Path"
+.\gradlew.bat testDebugUnitTest lintDebug
+```
+- `BUILD SUCCESSFUL`이면 통과입니다.
+- 린트 보고서: `android\app\build\reports\lint-results-debug.html` (경고는 실패가 아닙니다)
+
+### 8) 결과 알려 주기
+6)의 표 번호별로 통과/실패를 알려 주세요. 실패한 항목은 화면 캡처나 오류 문구를 같이 보내 주세요.
 
 ---
 
@@ -198,16 +256,7 @@ cd ~/dev/campus-hangout/server
   - [ ] `test` 통과 (8개)
   - [ ] ping, health, 없는 주소 응답이 위 표와 같음
 - 앱 화면
-  - [ ] 앱 이름 "Campus Hangout", 파란 말풍선 아이콘
-  - [ ] 하단 탭 4개. 휴대폰 언어가 한국어면 홈·채팅·친구·마이, 영어면 Home·Chats·Friends·My
-  - [ ] 탭을 누르면 화면이 바뀌고, 선택한 탭이 파란색으로 표시됨
-- 홈 카테고리 칩
-  - [ ] 좌우로 스크롤되고, 누르면 선택 표시가 옮겨감
-  - [ ] 칩을 고른 뒤 다른 탭에 갔다 돌아와도 선택이 유지됨
-  - [ ] 화면을 회전해도 선택이 유지됨
-- 설정 바꿔 보기
-  - [ ] 다크 테마: 설정 → 디스플레이 → 다크 테마를 켜면 어두운 색으로 바뀜
-  - [ ] 언어: 설정 → 시스템 → 언어에서 English를 맨 위로 올리면 문구가 영어로 바뀜
+  - [ ] D의 6) 체크리스트 11개 항목
 - 앱 자동 테스트
   - [ ] 단위 테스트 2개 통과
   - [ ] `lintDebug` 통과
