@@ -67,3 +67,4 @@ curl http://localhost:8080/api/v1/ping
 - [아키텍처 · ERD · 익명/실명 설계](docs/architecture.md)
 - [디자인 토큰](docs/design/tokens.md)
 - [Azure for Students 가입과 무료 자원](docs/guides/azure-for-students-setup.md)
+- [로컬 테스트 가이드 (push 전에 확인)](docs/guides/local-testing.md)

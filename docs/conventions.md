@@ -26,6 +26,7 @@
 범위는 `server`, `android`, `infra` 중 하나를 씁니다. 예: `feat(server): 학생증 심사 승인 API`
 
 ### PR
+- push 전에 [로컬 테스트 가이드](guides/local-testing.md)의 해당 Phase 체크리스트를 직접 확인합니다.
 - 이슈 하나에 PR 하나를 원칙으로 합니다.
 - CI가 통과해야 머지할 수 있습니다.
 - 머지는 **Squash and merge**로 합니다.
