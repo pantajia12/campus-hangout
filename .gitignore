@@ -34,3 +34,7 @@ server/uploads/
 
 # Logs
 *.log
+
+# Figma 내보내기 결과 (디자인 원본 데이터, 커밋하지 않음)
+tools/figma/out/
+tools/figma/figma-export.zip

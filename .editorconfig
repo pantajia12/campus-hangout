@@ -16,3 +16,8 @@ trim_trailing_whitespace = false
 
 [*.{bat,cmd}]
 end_of_line = crlf
+
+# Windows PowerShell 5.1은 BOM이 없으면 한글을 깨뜨림
+[*.ps1]
+charset = utf-8-bom
+end_of_line = crlf
