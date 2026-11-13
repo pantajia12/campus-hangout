@@ -3,6 +3,11 @@
 Figma와 앱 코드가 같은 값을 쓰도록 여기서 관리합니다.
 코드 위치: `android/app/src/main/java/com/campushangout/android/designsystem/theme/`
 
+> **Figma 동기화 대기 중** (Phase 1 첫 작업)
+> 아래 값은 Phase 0의 임시 값입니다. Figma 확인 결과 Coral은 같고, Gray/50은 `#FFFAF7`(따뜻한 흰색)로 바뀌며,
+> Blue 값과 일부 역할 배치는 정확한 값이 아직 없습니다. `tools/figma/`로 받은 데이터를 기준으로 맞춘 뒤 이 표를 갱신합니다.
+> 이름은 Figma 변수 이름과 똑같이 맞춥니다(`Gray/50` ↔ `Gray50`). 자세한 차이: [figma-review.md](figma-review.md)
+
 ## 색 (Color.kt)
 
 | 토큰 | 값 | 쓰임 |
