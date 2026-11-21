@@ -1,8 +1,8 @@
-
 package com.campushangout.server.account.controller
 
 import com.campushangout.server.account.dto.SignupRequest
 import com.campushangout.server.account.service.SignupService
+import com.campushangout.server.common.response.ApiResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -20,12 +20,16 @@ class SignupController(
     @PostMapping("/signup")
     fun signup(
         @Valid @RequestBody request: SignupRequest
-    ): ResponseEntity<Map<String, Long>> {
+    ): ResponseEntity<ApiResponse<Map<String, Long>>> {
 
         val userId = signupService.signup(request)
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(mapOf("userId" to userId))
+            .body(
+                ApiResponse.ok(
+                    mapOf("userId" to userId)
+                )
+            )
     }
 }

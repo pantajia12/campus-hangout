@@ -24,7 +24,6 @@ class SignupControllerTest {
     @Autowired
     lateinit var userRepository: UserRepository
 
-    // 테스트 1: 정상 회원가입
     @Test
     fun `회원가입 API 요청이 성공한다`() {
         val requestJson = """
@@ -39,7 +38,8 @@ class SignupControllerTest {
             content = requestJson
         }.andExpect {
             status { isCreated() }
-            jsonPath("$.userId") { exists() }
+            jsonPath("$.success") { value(true) }
+            jsonPath("$.data.userId") { exists() }
         }
 
         val savedUser = userRepository.findByEmail("api-test@cau.ac.kr")
@@ -48,7 +48,6 @@ class SignupControllerTest {
         assertFalse(savedUser!!.verified)
     }
 
-    // 테스트 2: 잘못된 이메일 형식
     @Test
     fun `잘못된 이메일로 회원가입하면 400을 반환한다`() {
         val requestJson = """
@@ -63,10 +62,11 @@ class SignupControllerTest {
             content = requestJson
         }.andExpect {
             status { isBadRequest() }
+            jsonPath("$.success") { value(false) }
+            jsonPath("$.error.code") { value("INVALID_INPUT") }
         }
     }
 
-    // 테스트 3: 비밀번호 길이 검증
     @Test
     fun `비밀번호가 8자 미만이면 400을 반환한다`() {
         val requestJson = """
@@ -81,6 +81,37 @@ class SignupControllerTest {
             content = requestJson
         }.andExpect {
             status { isBadRequest() }
+            jsonPath("$.success") { value(false) }
+            jsonPath("$.error.code") { value("INVALID_INPUT") }
+        }
+    }
+
+    @Test
+    fun `중복 이메일로 회원가입하면 409를 반환한다`() {
+        val requestJson = """
+            {
+                "email": "duplicate-api@cau.ac.kr",
+                "password": "example1234"
+            }
+        """.trimIndent()
+
+        mockMvc.post("/api/auth/signup") {
+            contentType = MediaType.APPLICATION_JSON
+            content = requestJson
+        }.andExpect {
+            status { isCreated() }
+        }
+
+        mockMvc.post("/api/auth/signup") {
+            contentType = MediaType.APPLICATION_JSON
+            content = requestJson
+        }.andExpect {
+            status { isConflict() }
+            jsonPath("$.success") { value(false) }
+            jsonPath("$.error.code") { value("CONFLICT") }
+            jsonPath("$.error.message") {
+                value("이미 가입된 이메일입니다.")
+            }
         }
     }
 }

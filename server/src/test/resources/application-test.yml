@@ -10,3 +10,6 @@ spring:
     open-in-view: false
   flyway:
     enabled: false
+
+jwt:
+  secret: "campus-hangout-test-jwt-secret-key-only-for-testing-2026"
