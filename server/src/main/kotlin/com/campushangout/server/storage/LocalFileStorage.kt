@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
 import java.util.UUID
 
 @Component
@@ -16,30 +14,50 @@ class LocalFileStorage(
     directory: String
 ) : FileStorage {
 
-    private val root: Path = Paths.get(directory)
-        .toAbsolutePath()
-        .normalize()
+    private val root = Paths.get(directory).toAbsolutePath().normalize()
+
+    companion object {
+        private const val MAX_FILE_SIZE = 5L * 1024 * 1024
+
+        private val PNG_SIGNATURE = byteArrayOf(
+            0x89.toByte(), 0x50, 0x4E, 0x47,
+            0x0D, 0x0A, 0x1A, 0x0A
+        )
+    }
 
     override fun save(file: MultipartFile): String {
-        val extension = when (file.contentType) {
-            "image/jpeg" -> "jpg"
-            "image/png" -> "png"
+        if (file.isEmpty || file.size > MAX_FILE_SIZE) {
+            throw InvalidStudentIdImageException()
+        }
+
+        val bytes = file.bytes
+
+        val extension = when {
+            file.contentType == "image/png" && isPng(bytes) -> "png"
+            file.contentType == "image/jpeg" && isJpeg(bytes) -> "jpg"
             else -> throw InvalidStudentIdImageException()
         }
 
-        val filename = "${UUID.randomUUID()}.$extension"
-        val destination = root.resolve(filename).normalize()
-
         Files.createDirectories(root)
 
-        file.inputStream.use { input ->
-            Files.copy(
-                input,
-                destination,
-                StandardCopyOption.REPLACE_EXISTING
-            )
-        }
+        val filename = "${UUID.randomUUID()}.$extension"
+        val destination = root.resolve(filename)
+
+        Files.write(destination, bytes)
 
         return filename
+    }
+
+    private fun isPng(bytes: ByteArray): Boolean {
+        return bytes.size >= PNG_SIGNATURE.size &&
+            bytes.take(PNG_SIGNATURE.size) == PNG_SIGNATURE.toList()
+    }
+
+    private fun isJpeg(bytes: ByteArray): Boolean {
+        return bytes.size >= 4 &&
+            bytes[0] == 0xFF.toByte() &&
+            bytes[1] == 0xD8.toByte() &&
+            bytes[bytes.size - 2] == 0xFF.toByte() &&
+            bytes[bytes.size - 1] == 0xD9.toByte()
     }
 }

@@ -1,10 +1,9 @@
+
 package com.campushangout.server.account
 
 import com.campushangout.server.account.config.JwtTokenProvider
 import com.campushangout.server.account.entity.User
 import com.campushangout.server.account.repository.UserRepository
-import org.hamcrest.Matchers.not
-import org.hamcrest.Matchers.hasKey
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
@@ -44,11 +43,15 @@ class StudentVerificationControllerTest {
         return jwtTokenProvider.generateToken(user.userId!!)
     }
 
+    // PNG 파일 시그니처 검사에 통과하는 테스트 데이터
     private fun createImage() = MockMultipartFile(
         "file",
         "student-id.png",
-        "image/png",
-        byteArrayOf(1, 2, 3, 4)
+        MediaType.IMAGE_PNG_VALUE,
+        byteArrayOf(
+            0x89.toByte(), 0x50, 0x4E, 0x47,
+            0x0D, 0x0A, 0x1A, 0x0A
+        )
     )
 
     @Test
@@ -138,6 +141,25 @@ class StudentVerificationControllerTest {
 
         mockMvc.multipart("/api/student-verifications") {
             file(invalidFile)
+            header("Authorization", "Bearer $token")
+        }.andExpect {
+            status { isBadRequest() }
+        }
+    }
+
+    @Test
+    fun `rejects fake PNG file`() {
+        val token = createToken()
+
+        val fakeFile = MockMultipartFile(
+            "file",
+            "fake.png",
+            MediaType.IMAGE_PNG_VALUE,
+            "This is not a real PNG".toByteArray()
+        )
+
+        mockMvc.multipart("/api/student-verifications") {
+            file(fakeFile)
             header("Authorization", "Bearer $token")
         }.andExpect {
             status { isBadRequest() }

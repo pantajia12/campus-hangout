@@ -43,7 +43,10 @@ class StudentVerificationManualApprovalTest {
             "file",
             "student-id.png",
             "image/png",
-            byteArrayOf(1, 2, 3, 4)
+            byteArrayOf(
+                0x89.toByte(), 0x50, 0x4E, 0x47,
+                0x0D, 0x0A, 0x1A, 0x0A
+            )
         )
 
         val result = service.submit(user.userId!!, file)
