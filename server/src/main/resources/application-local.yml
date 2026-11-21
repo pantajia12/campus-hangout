@@ -15,6 +15,14 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
 jwt:
   secret: ${JWT_SECRET}
+
+student-verification:
+  auto-approve: true
+  storage-directory: uploads/student-ids

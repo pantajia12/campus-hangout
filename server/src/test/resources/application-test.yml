@@ -13,3 +13,7 @@ spring:
 
 jwt:
   secret: "campus-hangout-test-jwt-secret-key-only-for-testing-2026"
+
+student-verification:
+  auto-approve: true
+  storage-directory: build/test-uploads/student-ids
