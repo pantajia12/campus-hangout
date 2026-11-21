@@ -3,3 +3,14 @@
 logging:
   level:
     com.campushangout: DEBUG
+
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/campushangout}
+    username: ${DB_USERNAME:campushangout}
+    password: ${DB_PASSWORD:campushangout-local}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
