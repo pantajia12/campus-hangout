@@ -1,4 +1,3 @@
-
 package com.campushangout.server.account
 
 import com.campushangout.server.account.config.JwtTokenProvider
@@ -164,5 +163,31 @@ class StudentVerificationControllerTest {
         }.andExpect {
             status { isBadRequest() }
         }
+    }
+
+    @Test
+    fun `oversized student ID image returns 413`() {
+        val token = createToken()
+
+        val oversizedFile = MockMultipartFile(
+            "file",
+            "student-id.png",
+            MediaType.IMAGE_PNG_VALUE,
+            ByteArray(5 * 1024 * 1024 + 1)
+        )
+
+        mockMvc.multipart("/api/student-verifications") {
+            file(oversizedFile)
+            header("Authorization", "Bearer $token")
+        }
+            .andDo { print() }
+            .andExpect {
+                status { isContentTooLarge() }
+                jsonPath("$.success") { value(false) }
+                jsonPath("$.error.code") { value("INVALID_INPUT") }
+                jsonPath("$.error.message") {
+                    value("파일 크기는 5MB를 초과할 수 없습니다.")
+                }
+            }
     }
 }

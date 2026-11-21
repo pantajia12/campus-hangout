@@ -1,6 +1,7 @@
 package com.campushangout.server.storage
 
 import com.campushangout.server.account.exception.InvalidStudentIdImageException
+import com.campushangout.server.common.error.StudentIdFileTooLargeException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
@@ -26,7 +27,12 @@ class LocalFileStorage(
     }
 
     override fun save(file: MultipartFile): String {
-        if (file.isEmpty || file.size > MAX_FILE_SIZE) {
+
+        if (file.size > MAX_FILE_SIZE) {
+            throw StudentIdFileTooLargeException()
+        }
+
+        if (file.isEmpty) {
             throw InvalidStudentIdImageException()
         }
 
