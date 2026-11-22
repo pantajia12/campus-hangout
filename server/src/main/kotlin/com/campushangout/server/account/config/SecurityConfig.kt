@@ -28,6 +28,11 @@ class SecurityConfig(
                         "/api/auth/signup",
                         "/api/auth/login"
                     ).permitAll()
+                    .requestMatchers(
+                        HttpMethod.GET,
+                        "/api/languages",
+                        "/api/interests"
+                    ).permitAll()
                     .anyRequest().authenticated()
             }
             .exceptionHandling {
