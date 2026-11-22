@@ -173,7 +173,7 @@ class StudentVerificationControllerTest {
             "file",
             "student-id.png",
             MediaType.IMAGE_PNG_VALUE,
-            ByteArray(5 * 1024 * 1024 + 1)
+            ByteArray(10 * 1024 * 1024 + 1)
         )
 
         mockMvc.multipart("/api/student-verifications") {
@@ -186,7 +186,7 @@ class StudentVerificationControllerTest {
                 jsonPath("$.success") { value(false) }
                 jsonPath("$.error.code") { value("INVALID_INPUT") }
                 jsonPath("$.error.message") {
-                    value("파일 크기는 5MB를 초과할 수 없습니다.")
+                    value("파일 크기는 10MB를 초과할 수 없습니다.")
                 }
             }
     }

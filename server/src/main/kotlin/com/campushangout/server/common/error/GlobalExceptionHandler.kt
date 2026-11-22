@@ -83,7 +83,7 @@ class GlobalExceptionHandler {
             .body(
                 ApiResponse.fail(
                     ErrorCode.INVALID_INPUT,
-                    "파일 크기는 5MB를 초과할 수 없습니다."
+                    "파일 크기는 10MB를 초과할 수 없습니다."
                 )
             )
 

@@ -18,7 +18,7 @@ class LocalFileStorage(
     private val root = Paths.get(directory).toAbsolutePath().normalize()
 
     companion object {
-        private const val MAX_FILE_SIZE = 5L * 1024 * 1024
+        private const val MAX_FILE_SIZE = 10L * 1024 * 1024
 
         private val PNG_SIGNATURE = byteArrayOf(
             0x89.toByte(), 0x50, 0x4E, 0x47,
