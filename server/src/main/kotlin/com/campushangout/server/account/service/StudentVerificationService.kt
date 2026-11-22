@@ -8,6 +8,9 @@ import com.campushangout.server.account.exception.StudentVerificationAlreadySubm
 import com.campushangout.server.account.exception.StudentVerificationUserNotFoundException
 import com.campushangout.server.account.repository.StudentVerificationRepository
 import com.campushangout.server.account.repository.UserRepository
+import com.campushangout.server.common.error.BusinessException
+import com.campushangout.server.common.error.ErrorCode
+import com.campushangout.server.profile.repository.UserProfileRepository
 import com.campushangout.server.storage.FileStorage
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -19,6 +22,7 @@ import java.time.LocalDateTime
 class StudentVerificationService(
     private val userRepository: UserRepository,
     private val verificationRepository: StudentVerificationRepository,
+    private val userProfileRepository: UserProfileRepository,
     private val fileStorage: FileStorage,
     @Value("\${student-verification.auto-approve:false}")
     private val autoApprove: Boolean
@@ -35,7 +39,16 @@ class StudentVerificationService(
                 StudentVerificationUserNotFoundException()
             }
 
-        if (verificationRepository
+        // 학생증 제출 전 최초 프로필 등록 필수
+        if (!userProfileRepository.existsById(userId)) {
+            throw BusinessException(
+                ErrorCode.CONFLICT,
+                "프로필 등록을 먼저 완료해주세요."
+            )
+        }
+
+        if (
+            verificationRepository
                 .findTopByUserUserIdOrderBySubmittedAtDescVerificationIdDesc(
                     userId
                 ) != null

@@ -2,6 +2,7 @@ package com.campushangout.server.account
 
 import com.campushangout.server.account.config.JwtTokenProvider
 import com.campushangout.server.account.dto.SignupRequest
+import com.campushangout.server.account.repository.UserRepository
 import com.campushangout.server.account.service.SignupService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.get
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -32,15 +34,29 @@ class JwtAuthenticationIntegrationTest {
     @Autowired
     lateinit var signupService: SignupService
 
-    @Test
-    fun `유효한 JWT로 보호된 API에 접근할 수 있다`() {
+    @Autowired
+    lateinit var userRepository: UserRepository
+
+    private fun createUser(verified: Boolean = false): Long {
         val userId = signupService.signup(
             SignupRequest(
-                email = "jwt-test@cau.ac.kr",
+                email = "jwt-${UUID.randomUUID()}@cau.ac.kr",
                 password = "example1234"
             )
         )
 
+        if (verified) {
+            val user = userRepository.findById(userId).orElseThrow()
+            user.verified = true
+            userRepository.save(user)
+        }
+
+        return userId
+    }
+
+    @Test
+    fun `유효한 JWT와 학생증 승인이 있으면 보호된 API에 접근할 수 있다`() {
+        val userId = createUser(verified = true)
         val token = jwtTokenProvider.generateToken(userId)
 
         mockMvc.get("/api/test/auth") {
@@ -48,6 +64,23 @@ class JwtAuthenticationIntegrationTest {
         }.andExpect {
             status { isOk() }
             content { string(userId.toString()) }
+        }
+    }
+
+    @Test
+    fun `유효한 JWT가 있어도 학생증 미승인이면 403을 반환한다`() {
+        val userId = createUser(verified = false)
+        val token = jwtTokenProvider.generateToken(userId)
+
+        mockMvc.get("/api/test/auth") {
+            header("Authorization", "Bearer $token")
+        }.andExpect {
+            status { isForbidden() }
+            jsonPath("$.success") { value(false) }
+            jsonPath("$.error.code") { value("FORBIDDEN") }
+            jsonPath("$.error.message") {
+                value("학생증 승인 후 이용할 수 있습니다.")
+            }
         }
     }
 

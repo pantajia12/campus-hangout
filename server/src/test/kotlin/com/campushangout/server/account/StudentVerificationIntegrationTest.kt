@@ -6,6 +6,8 @@ import com.campushangout.server.account.exception.StudentVerificationAlreadySubm
 import com.campushangout.server.account.repository.StudentVerificationRepository
 import com.campushangout.server.account.repository.UserRepository
 import com.campushangout.server.account.service.StudentVerificationService
+import com.campushangout.server.profile.entity.UserProfile
+import com.campushangout.server.profile.repository.UserProfileRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -26,15 +29,32 @@ class StudentVerificationIntegrationTest {
     lateinit var userRepository: UserRepository
 
     @Autowired
+    lateinit var userProfileRepository: UserProfileRepository
+
+    @Autowired
     lateinit var verificationRepository: StudentVerificationRepository
 
-    private fun createUser(): User =
-        userRepository.save(
+    private fun createUser(): User {
+        val user = userRepository.save(
             User(
-                email = "student-${java.util.UUID.randomUUID()}@test.com",
+                email = "student-${UUID.randomUUID()}@test.com",
                 password = "encoded-password"
             )
         )
+
+        userProfileRepository.save(
+            UserProfile(
+                userId = user.userId!!,
+                name = "Alex",
+                nationality = "Korea",
+                major = "Computer Science",
+                bio = null,
+                color = 1.toShort()
+            )
+        )
+
+        return user
+    }
 
     private fun createImage() = MockMultipartFile(
         "file",

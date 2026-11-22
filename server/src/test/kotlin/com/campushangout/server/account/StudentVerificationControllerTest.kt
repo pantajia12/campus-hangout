@@ -3,6 +3,8 @@ package com.campushangout.server.account
 import com.campushangout.server.account.config.JwtTokenProvider
 import com.campushangout.server.account.entity.User
 import com.campushangout.server.account.repository.UserRepository
+import com.campushangout.server.profile.entity.UserProfile
+import com.campushangout.server.profile.repository.UserProfileRepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
@@ -29,9 +31,14 @@ class StudentVerificationControllerTest {
     lateinit var userRepository: UserRepository
 
     @Autowired
+    lateinit var userProfileRepository: UserProfileRepository
+
+    @Autowired
     lateinit var jwtTokenProvider: JwtTokenProvider
 
-    private fun createToken(): String {
+    private fun createToken(
+        withProfile: Boolean = true
+    ): String {
         val user = userRepository.save(
             User(
                 email = "controller-${UUID.randomUUID()}@test.com",
@@ -39,7 +46,22 @@ class StudentVerificationControllerTest {
             )
         )
 
-        return jwtTokenProvider.generateToken(user.userId!!)
+        val userId = requireNotNull(user.userId)
+
+        if (withProfile) {
+            userProfileRepository.save(
+                UserProfile(
+                    userId = userId,
+                    name = "Alex",
+                    nationality = "Korea",
+                    major = "Computer Science",
+                    bio = null,
+                    color = 1.toShort()
+                )
+            )
+        }
+
+        return jwtTokenProvider.generateToken(userId)
     }
 
     // PNG 파일 시그니처 검사에 통과하는 테스트 데이터
@@ -64,6 +86,23 @@ class StudentVerificationControllerTest {
             status { isCreated() }
             jsonPath("$.success") { value(true) }
             jsonPath("$.data.status") { value("APPROVED") }
+        }
+    }
+
+    @Test
+    fun `student ID submission without profile returns 409`() {
+        val token = createToken(withProfile = false)
+
+        mockMvc.multipart("/api/student-verifications") {
+            file(createImage())
+            header("Authorization", "Bearer $token")
+        }.andExpect {
+            status { isConflict() }
+            jsonPath("$.success") { value(false) }
+            jsonPath("$.error.code") { value("CONFLICT") }
+            jsonPath("$.error.message") {
+                value("프로필 등록을 먼저 완료해주세요.")
+            }
         }
     }
 
@@ -179,15 +218,13 @@ class StudentVerificationControllerTest {
         mockMvc.multipart("/api/student-verifications") {
             file(oversizedFile)
             header("Authorization", "Bearer $token")
-        }
-            .andDo { print() }
-            .andExpect {
-                status { isContentTooLarge() }
-                jsonPath("$.success") { value(false) }
-                jsonPath("$.error.code") { value("INVALID_INPUT") }
-                jsonPath("$.error.message") {
-                    value("파일 크기는 10MB를 초과할 수 없습니다.")
-                }
+        }.andExpect {
+            status { isContentTooLarge() }
+            jsonPath("$.success") { value(false) }
+            jsonPath("$.error.code") { value("INVALID_INPUT") }
+            jsonPath("$.error.message") {
+                value("파일 크기는 10MB를 초과할 수 없습니다.")
             }
+        }
     }
 }

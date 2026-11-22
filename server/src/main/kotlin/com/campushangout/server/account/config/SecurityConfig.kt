@@ -1,5 +1,6 @@
 package com.campushangout.server.account.config
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -11,7 +12,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
-    private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint
+    private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
+    private val studentVerificationAccessFilter: StudentVerificationAccessFilter
 ) {
 
     @Bean
@@ -42,8 +44,21 @@ class SecurityConfig(
                 jwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter::class.java
             )
+            .addFilterAfter(
+                studentVerificationAccessFilter,
+                JwtAuthenticationFilter::class.java
+            )
             .httpBasic { it.disable() }
             .formLogin { it.disable() }
             .build()
+    }
+
+    @Bean
+    fun studentVerificationFilterRegistration(
+        filter: StudentVerificationAccessFilter
+    ): FilterRegistrationBean<StudentVerificationAccessFilter> {
+        return FilterRegistrationBean(filter).apply {
+            isEnabled = false
+        }
     }
 }
