@@ -1,6 +1,6 @@
 package com.campushangout.server.common.response
 
-import com.campushangout.server.common.error.ErrorCode
+import com.campushangout.server.common.error.ApiErrorCode
 import com.fasterxml.jackson.annotation.JsonInclude
 
 /**
@@ -34,12 +34,12 @@ data class ApiResponse<T>(
         fun ok(): ApiResponse<Unit> = ApiResponse(success = true)
 
         fun fail(
-            errorCode: ErrorCode,
+            errorCode: ApiErrorCode,
             message: String = errorCode.message,
             details: List<FieldErrorDetail>? = null,
         ): ApiResponse<Nothing> = ApiResponse(
             success = false,
-            error = ErrorBody(code = errorCode.name, message = message, details = details),
+            error = ErrorBody(code = errorCode.code, message = message, details = details),
         )
     }
 }

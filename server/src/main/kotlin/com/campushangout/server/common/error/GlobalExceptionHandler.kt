@@ -88,7 +88,7 @@ class GlobalExceptionHandler {
             )
 
     private fun respond(
-        errorCode: ErrorCode,
+        errorCode: ApiErrorCode,
         message: String = errorCode.message,
         details: List<ApiResponse.FieldErrorDetail>? = null
     ): ResponseEntity<ApiResponse<Nothing>> =

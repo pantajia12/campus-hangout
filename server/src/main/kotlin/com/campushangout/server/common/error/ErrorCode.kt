@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus
  * 도메인별 에러 코드는 각 Phase에서 추가한다. (예: Phase 1 - DUPLICATE_STUDENT_NUMBER)
  */
 enum class ErrorCode(
-    val status: HttpStatus,
-    val message: String,
-) {
+    override val status: HttpStatus,
+    override val message: String,
+) : ApiErrorCode {
     // 공통
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
@@ -21,6 +21,9 @@ enum class ErrorCode(
     CONFLICT(HttpStatus.CONFLICT, "요청이 현재 상태와 충돌합니다."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다."),
     ;
+
+    /** Common codes have no prefix. */
+    override val code: String get() = name
 
     companion object {
         /** Spring이 던지는 표준 예외의 HTTP 상태를 가장 가까운 공통 코드로 바꾼다. */

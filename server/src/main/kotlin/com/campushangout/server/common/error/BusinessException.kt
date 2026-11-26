@@ -7,6 +7,6 @@ package com.campushangout.server.common.error
  * 예: throw BusinessException(ErrorCode.NOT_FOUND, "채팅방을 찾을 수 없습니다.")
  */
 open class BusinessException(
-    val errorCode: ErrorCode,
+    val errorCode: ApiErrorCode,
     override val message: String = errorCode.message,
 ) : RuntimeException(message)
