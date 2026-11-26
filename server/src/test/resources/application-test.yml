@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:campushangout;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+  flyway:
+    enabled: false
+
+jwt:
+  secret: "campus-hangout-test-jwt-secret-key-only-for-testing-2026"
+
+student-verification:
+  auto-approve: true
+  storage-directory: build/test-uploads/student-ids
