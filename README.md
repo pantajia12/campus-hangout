@@ -1,5 +1,27 @@
 # Campus Hangout
 
+An Android app for Chung-Ang University students to meet international friends and study partners.
+Students create or join **meetup rooms** by category (date, place, capacity), chat in real time, and send "knocks" to make friends.
+Only students verified by their student ID card can sign up.
+
+**Team docs (English):** [Team Guide](docs/team/TEAM_GUIDE.md) · [API conventions](docs/api/conventions.md) · [Social API](docs/api/social.md)
+
+## Team
+
+| Member | GitHub | Role |
+|---|---|---|
+| Yechan Han | [@pantajia12](https://github.com/pantajia12) | Backend (meetup rooms, chat, knocks, reports), Android networking |
+| Hyeonsu | [@usernamehs](https://github.com/usernamehs) | Backend (sign-up, login, student ID verification, profile) |
+| Håkon | — | Design (Figma), Android UI |
+
+## Tech stack
+
+Android: Kotlin, Jetpack Compose, Material 3 · Server: Kotlin, Spring Boot 4, JDK 21 · DB: PostgreSQL 17, Redis 7 · CI: GitHub Actions
+
+---
+
+## 한국어
+
 중앙대학교 학생이 **관심사가 같은 외국인 친구**, **같이 공부할 친구**를 찾는 앱입니다.
 카카오톡 오픈채팅처럼 카테고리별 **모임 방**(날짜·장소·정원)을 만들고 참여해 대화하고, 학생증 인증을 거친 학생만 가입할 수 있습니다.
 
@@ -63,6 +85,8 @@ curl http://localhost:8080/api/v1/ping
 
 ## 문서
 
+- [팀 가이드 (영어, 2주 일정·역할·규칙)](docs/team/TEAM_GUIDE.md)
+- [API 공통 규칙 (영어)](docs/api/conventions.md) · [모임·채팅·노크·신고 API (영어)](docs/api/social.md)
 - [로드맵](docs/ROADMAP.md)
 - [개발 규칙 (Git, API, 코드 스타일)](docs/conventions.md)
 - [아키텍처 · ERD · 익명/실명 설계](docs/architecture.md)
@@ -74,8 +98,4 @@ curl http://localhost:8080/api/v1/ping
 
 ## 만든 사람
 
-| GitHub | 역할 |
-|---|---|
-| [@pantajia12](https://github.com/pantajia12) | 기획 · 개발 |
-
-<!-- 팀원이 생기면 위 표에 한 줄씩 추가하세요. -->
+위 [Team](#team) 표를 보세요.
