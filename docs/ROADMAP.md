@@ -1,5 +1,11 @@
 # Campus Hangout 로드맵 (v4)
 
+> **v5 (2026-11-26): 3인 팀, 마감 12월 10일로 압축.** 일정·역할·범위는 [Team Guide (영어)](team/TEAM_GUIDE.md)가 기준입니다.
+> - Hyeonsu: 가입·로그인·학생증 심사·프로필 서버 / Yechan(pantajia12): 모임·채팅·노크·신고 서버, 앱 네트워크, Figma에 없는 화면 / Håkon: 디자인, Figma 화면
+> - 서버는 한 모듈로 두고 패키지(account·profile / social / common·contract)로 경계를 나누며 테스트로 검사
+> - 관심사(profile의 interests)와 모임 카테고리(social의 room_categories)는 분리
+> - 아래 v4 내용 중 기간 안에 못 하는 항목은 Team Guide §3 "Cut"에 있습니다
+
 > **v4에서 달라진 점: Figma 디자인 반영** ([분석 문서](design/figma-review.md))
 > - 서비스 개념 확정: **모임 중심 · 친구 · 노크로 시작하는 1:1 대화**
 > - "방"은 날짜·시간·장소·정원이 있는 **모임**입니다. 참여 방식은 (실명/익명) × (바로 참여/방장 승인)
