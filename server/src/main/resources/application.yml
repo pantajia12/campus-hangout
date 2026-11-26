@@ -3,6 +3,9 @@ spring:
     name: campus-hangout-server
   profiles:
     default: local
+  flyway:
+    # Branches may be merged in any order; migrations use timestamped versions (see docs/team/TEAM_GUIDE.md)
+    out-of-order: true
 
 server:
   port: ${SERVER_PORT:8080}
